@@ -1,7 +1,10 @@
-from django.shortcuts import render
-from django.http import JsonResponse
+from rest_framework import generics
+from django.contrib.auth import get_user_model
+from .serializers import UserSerializer
+
+User = get_user_model()
 
 # Create your views here.
 
-def home(request):
-    return JsonResponse({"message": "API is running!"})
+class Register(generics.CreateAPIView):
+    serializer_class = UserSerializer

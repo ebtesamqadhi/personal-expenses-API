@@ -51,13 +51,13 @@ jobs:
       - name: Run migrations
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          SECRET_KEY: django-insecure-ci-secret
         run: |
           python manage.py migrate
 
       - name: Run tests
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          SECRET_KEY: django-insecure-ci-secret
         run: |
           python manage.py test
-
-

@@ -41,6 +41,13 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
+
       - name: Run migrations
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
@@ -52,3 +59,4 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
         run: |
           python manage.py test
+

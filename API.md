@@ -10,9 +10,9 @@ https://personal-expenses-api-movz.onrender.com
 
 Create new user account.
 
-POST /api/accounts/register
+**POST** /api/accounts/register
 
-Body:
+**Body**
 {
 "username": "testuser",
 "email": "test@email.com",
@@ -23,9 +23,9 @@ Body:
 
 ## Login (Get Tokens)
 
-POST /api/token/
+**POST** /api/token/
 
-Body:
+**Body**:
 {
 "email": "testuser",
 "password": "12345678"
@@ -41,9 +41,9 @@ Response:
 
 ## Refresh Token
 
-POST /api/token/refresh/
+**POST** /api/token/refresh/
 
-Body:
+**Body**:
 {
 "refresh": "jwt_refresh_token"
 }
@@ -71,38 +71,61 @@ Returns all transactions for the authenticated user.
 
 ### Create Transaction
 
-POST /api/transactions/
+**POST** /api/transactions/
 
 Auth: Bearer Token
+**Body**:
+{
+  "type": "expense",
+  "amount": 10.50,
+  "description": "Lunch",
+  "date": "2026-02-03"
+}
+
 
 ---
 
 ### Retrieve Transaction by ID
 
-GET /api/transactions/{id}
+**GET** /api/transactions/{id}
 
 Auth: Bearer Token
+Description: Returns details of a specific transaction by ID.
 
 ---
 
 ### Delete Transaction by ID
 
-DELETE /api/transactions/{id}
+**DELETE** /api/transactions/{id}
 
 ---
 
 ### Update Transaction (Full)
 
-PUT /api/transactions/{id}
+**PUT** /api/transactions/{id}
 
-Auth: Bearer
+Auth: Bearer Token
+**Body**: (All fields required)
+{
+  "type": "income",
+  "amount": 50.00,
+  "description": "Salary",
+  "date": "2026-02-01"
+}
+
 
 ---
 
 ### Update Transaction (Partial)
 
-PATCH /api/transactions/{id}
+**PATCH** /api/transactions/{id}
 
 Auth: Bearer Token
+**Body**: (Only fields to update)
+{
+  "amount": 55.00
+}
+
 
 ---
+

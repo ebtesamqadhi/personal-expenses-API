@@ -1,11 +1,12 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
 from .serializers import TransactionSerializer
 from .models import Transaction
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 class TransactionList(generics.ListCreateAPIView):
     serializer_class = TransactionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     # البيانات اللي بيتم عرضه عند GET
     def get_queryset(self):
@@ -16,8 +17,8 @@ class TransactionList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class Transaction(generics.RetrieveUpdateDestroyAPIView):
+class TransactionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     

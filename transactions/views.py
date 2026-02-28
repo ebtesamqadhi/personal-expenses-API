@@ -10,7 +10,6 @@ class TransactionList(generics.ListCreateAPIView):
     
     # البيانات اللي بيتم عرضه عند GET
     def get_queryset(self):
-        print("USER:", self.request.user)
         return Transaction.objects.filter(user=self.request.user)
 
     # عند POST يخزن المستخدم تلقائيا
@@ -18,7 +17,7 @@ class TransactionList(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 class TransactionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
-    
+    def get_queryset(self):
+        return Transaction.objects.filter(user= self.request.user)

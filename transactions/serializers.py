@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Transaction
+from .models import Transaction, Category
 
 class TransactionSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -7,3 +7,10 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ["user", 'id', "type", "amount", "description", "date", "created_at"]
         read_only_fields = ['created_at']
+        
+class CategorySerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Category
+        fields = '__all__'
+    

@@ -3,11 +3,16 @@ from .serializers import TransactionSerializer, CategorySerializer
 from .models import Transaction, Category
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 # Create your views here.
 
 class TransactionList(generics.ListCreateAPIView):
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['type', 'category', 'date']
+    ordering_fields = ['amount', 'date', 'created_at']
     
     # البيانات اللي بيتم عرضه عند GET
     def get_queryset(self):
@@ -26,6 +31,8 @@ class TransactionDetail(generics.RetrieveUpdateDestroyAPIView):
 class CategoryList(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['name']
     
     def get_queryset(self):
         return Category.objects.filter(user=self.request.user)

@@ -6,11 +6,17 @@ https://personal-expenses-api-movz.onrender.com
 
 ---
 
+## Authentication
+
+Authentication is handled using JWT tokens with Djoser and Simple JWT.
+
+---
+
 ## Register
 
 Create new user account.
 
-**POST** /api/accounts/register
+**POST** /auth/users/
 
 **Body**
 {
@@ -23,7 +29,7 @@ Create new user account.
 
 ## Login (Get Tokens)
 
-**POST** /api/token/
+**POST** /jwt/create/
 
 **Body**:
 {
@@ -39,9 +45,23 @@ Response:
 
 ---
 
+## Change Password
+
+Change the current user's password.
+
+**POST** /auth/users/set_password/
+
+**Body**:
+{
+"current_password": "oldpassword123",
+"new_password": "newpassword123"
+}
+
+---
+
 ## Refresh Token
 
-**POST** /api/token/refresh/
+**POST** /jwt/refresh/
 
 **Body**:
 {
@@ -54,7 +74,7 @@ Response:
 
 For protected endpoints, include this header:
 
-Authorization: Bearer <access_token>
+Authorization: JWT <access_token>
 
 ---
 
@@ -62,7 +82,7 @@ Authorization: Bearer <access_token>
 
 GET /api/transactions/
 
-Auth: Bearer Token
+Auth: JWT Token
 
 Description:
 Returns all transactions for the authenticated user.
@@ -73,15 +93,14 @@ Returns all transactions for the authenticated user.
 
 **POST** /api/transactions/
 
-Auth: Bearer Token
+Auth: JWT Token
 **Body**:
 {
-  "type": "expense",
-  "amount": 10.50,
-  "description": "Lunch",
-  "date": "2026-02-03"
+"type": "expense",
+"amount": 10.50,
+"description": "Lunch",
+"date": "2026-02-03"
 }
-
 
 ---
 
@@ -89,7 +108,7 @@ Auth: Bearer Token
 
 **GET** /api/transactions/{id}
 
-Auth: Bearer Token
+Auth: JWT Token
 Description: Returns details of a specific transaction by ID.
 
 ---
@@ -98,21 +117,22 @@ Description: Returns details of a specific transaction by ID.
 
 **DELETE** /api/transactions/{id}
 
+Auth: JWT Token
+
 ---
 
 ### Update Transaction (Full)
 
 **PUT** /api/transactions/{id}
 
-Auth: Bearer Token
+Auth: JWT Token
 **Body**: (All fields required)
 {
-  "type": "income",
-  "amount": 50.00,
-  "description": "Salary",
-  "date": "2026-02-01"
+"type": "income",
+"amount": 50.00,
+"description": "Salary",
+"date": "2026-02-01"
 }
-
 
 ---
 
@@ -120,12 +140,67 @@ Auth: Bearer Token
 
 **PATCH** /api/transactions/{id}
 
-Auth: Bearer Token
+Auth: JWT Token
 **Body**: (Only fields to update)
 {
-  "amount": 55.00
+"amount": 55.00
 }
-
 
 ---
 
+## List Categories
+
+**GET** /api/transactions/category
+
+Auth: JWT Token
+Description:
+Returns all categories for the authenticated user.
+
+---
+
+## Create Category
+
+**POST** /api/transactions/category
+
+Auth: JWT Token
+Body:
+
+{
+"name": "Food"
+}
+
+Description:
+Creates a new category for the authenticated user.
+
+---
+
+## Retrieve Category by ID
+
+**GET** /api/transactions/category/{id}
+
+Auth: JWT Token
+Description:
+Returns details of a specific category by ID.
+
+---
+
+## Delete Category by ID
+
+**DELETE** /api/transactions/category/{id}
+
+Auth: JWT Token
+
+---
+
+## Update Category (Full)
+
+**PUT** /api/transactions/category/{id}
+
+Auth: JWT Token
+**Body**: (All fields required)
+
+{
+"name": "Groceries"
+}
+
+---

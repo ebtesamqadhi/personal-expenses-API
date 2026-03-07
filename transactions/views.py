@@ -14,11 +14,9 @@ class TransactionList(generics.ListCreateAPIView):
     filterset_fields = ['type', 'category', 'date']
     ordering_fields = ['amount', 'date', 'created_at']
     
-    # البيانات اللي بيتم عرضه عند GET
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
 
-    # عند POST يخزن المستخدم تلقائيا
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 

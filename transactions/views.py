@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from django.db.models import Sum
 # Create your views here.
 
 class TransactionList(generics.ListCreateAPIView):
@@ -19,6 +20,31 @@ class TransactionList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        transactions = Transaction.objects.filter(user=request.user)
+        total_income = transactions.filter(type='income').aggregate(total=Sum('amount'))['total'] or 0
+        total_expense = transactions.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
+        balance = total_income - total_expense
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            paginated_response = self.get_paginated_response(serializer.data)
+            paginated_response.data['total_income'] = total_income
+            paginated_response.data['total_expense'] = total_expense
+            paginated_response.data['balance'] = balance
+            return paginated_response
+        
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            'results': serializer.data,
+            'total_income': total_income,
+            'total_expense': total_expense,
+            'balance': balance,
+        })
 
 class TransactionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TransactionSerializer

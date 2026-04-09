@@ -8,7 +8,18 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django.db.models import Sum
 # Create your views here.
 
-class TransactionList(generics.ListCreateAPIView):
+class BaseTransactionView:
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        transactions = Transaction.objects.filter(user=self.request.user)
+        total_income = transactions.filter(type='income').aggregate(total=Sum('amount'))['total'] or 0
+        total_expense = transactions.filter(type='expense').aggregate(total=Sum('amount'))['total'] or 0
+        balance = total_income - total_expense
+
+        context['balance'] = balance
+        return context
+
+class TransactionList(BaseTransactionView, generics.ListCreateAPIView):
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -46,7 +57,8 @@ class TransactionList(generics.ListCreateAPIView):
             'balance': balance,
         })
 
-class TransactionDetail(generics.RetrieveUpdateDestroyAPIView):
+class TransactionDetail(BaseTransactionView, generics.RetrieveUpdateDestroyAPIView):
+    http_method_names = ['get', 'patch', 'delete']
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
     def get_queryset(self):

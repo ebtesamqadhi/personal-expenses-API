@@ -12,7 +12,7 @@ Authentication is handled using JWT tokens with Djoser and Simple JWT.
 
 ---
 
-## Register
+### Register
 
 Create new user account.
 
@@ -27,13 +27,13 @@ Create new user account.
 
 ---
 
-## Login (Get Tokens)
+### Login (Get Tokens)
 
 **POST** /jwt/create/
 
 **Body**:
 {
-"email": "testuser",
+"email": "test@email.com",
 "password": "12345678"
 }
 
@@ -45,7 +45,7 @@ Response:
 
 ---
 
-## Change Password
+### Change Password
 
 Change the current user's password.
 
@@ -59,7 +59,7 @@ Change the current user's password.
 
 ---
 
-## Refresh Token
+### Refresh Token
 
 **POST** /jwt/refresh/
 
@@ -70,19 +70,20 @@ Change the current user's password.
 
 ---
 
-## Authorization Header (Important)
+### Authorization Header (Important)
 
 For protected endpoints, include this header:
 
-Authorization: JWT <access_token>
+Authorization: Bearer <access_token>
 
 ---
 
+## Transactions
 ### List Transactions
 
 GET /api/transactions/
 
-Auth: JWT Token
+Auth: Bearer Token
 
 Description:
 Returns all transactions for the authenticated user.
@@ -93,13 +94,14 @@ Returns all transactions for the authenticated user.
 
 **POST** /api/transactions/
 
-Auth: JWT Token
+Auth: Bearer Token
 **Body**:
 {
 "type": "expense",
 "amount": 10.50,
 "description": "Lunch",
-"date": "2026-02-03"
+"date": "2026-02-03",
+"category": 1
 }
 
 ---
@@ -108,7 +110,7 @@ Auth: JWT Token
 
 **GET** /api/transactions/{id}
 
-Auth: JWT Token
+Auth: Bearer Token
 Description: Returns details of a specific transaction by ID.
 
 ---
@@ -117,52 +119,40 @@ Description: Returns details of a specific transaction by ID.
 
 **DELETE** /api/transactions/{id}
 
-Auth: JWT Token
-
----
-
-### Update Transaction (Full)
-
-**PUT** /api/transactions/{id}
-
-Auth: JWT Token
-**Body**: (All fields required)
-{
-"type": "income",
-"amount": 50.00,
-"description": "Salary",
-"date": "2026-02-01"
-}
+Auth: Bearer Token
 
 ---
 
 ### Update Transaction (Partial)
 
 **PATCH** /api/transactions/{id}
-
-Auth: JWT Token
+Updates specific fields of a transaction.
+Auth: Bearer Token
 **Body**: (Only fields to update)
 {
-"amount": 55.00
+"description": "Lunch",
+"date": "2026-02-03",
+"category": 1
 }
 
 ---
 
-## List Categories
+## Categories
+### List Categories
 
 **GET** /api/transactions/category
 
-Auth: JWT Token
+Auth: Bearer Token
 Description:
 Returns all categories for the authenticated user.
 
 ---
 
-## Create Category
+### Create Category
 
 **POST** /api/transactions/category
 
-Auth: JWT Token
+Auth: Bearer Token
 Body:
 
 {
@@ -174,30 +164,30 @@ Creates a new category for the authenticated user.
 
 ---
 
-## Retrieve Category by ID
+### Retrieve Category by ID
 
 **GET** /api/transactions/category/{id}
 
-Auth: JWT Token
+Auth: Bearer Token
 Description:
 Returns details of a specific category by ID.
 
 ---
 
-## Delete Category by ID
+### Delete Category by ID
 
 **DELETE** /api/transactions/category/{id}
 
-Auth: JWT Token
+Auth: Bearer Token
 
 ---
 
-## Update Category (Full)
+### Update Category 
 
-**PUT** /api/transactions/category/{id}
+**PATCH** /api/transactions/category/{id}
 
-Auth: JWT Token
-**Body**: (All fields required)
+Auth: Bearer Token
+**Body**:
 
 {
 "name": "Groceries"
